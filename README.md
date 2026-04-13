@@ -1,2 +1,0 @@
-# Miz
-db.json
